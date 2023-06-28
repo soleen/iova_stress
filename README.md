@@ -2,7 +2,7 @@
 DMA_MAP / DMA_UNMAP 4K page every 2M in IOVA SPACE for a given number of IOVA space terabytes.
 
 ## Example usage
-### Finad a suitable device:
+### Find a suitable device:
 ```
 # lspci -v
   02:00.1 Ethernet controller: Intel Corporation Ethernet Adaptive Virtual Function (rev 11)
