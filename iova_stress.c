@@ -51,7 +51,7 @@ main (int argc, char *argv[]) {
 	/* Open the group */
 	sprintf(group_path, "/dev/vfio/%d", iommu_group);
 	group = open(group_path, O_RDWR);
-	if (container < 0) {
+	if (group < 0) {
 		perror("open(group_path)");
 		exit(1);
 	}
