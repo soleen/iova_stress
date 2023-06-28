@@ -95,7 +95,7 @@ main (int argc, char *argv[]) {
 			continue;
 		}
 		if (ioctl(container, VFIO_IOMMU_UNMAP_DMA, &dma_unmap)) {
-			fprintf(stderr, "MAP_UNDMA failed at 0x%lx\n", dma_unmap.iova);
+			fprintf(stderr, "VFIO_IOMMU_UNMAP_DMA failed at 0x%lx\n", dma_unmap.iova);
 			exit(1);
 		}
 	}
