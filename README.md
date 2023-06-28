@@ -3,7 +3,8 @@ DMA_MAP / DMA_UNMAP 4K page every 2M in IOVA SPACE for a given number of IOVA sp
 
 ## Example usage
 ### Finad a suitable device:
-\# lspci -v
+```
+# lspci -v
   02:00.1 Ethernet controller: Intel Corporation Ethernet Adaptive Virtual Function (rev 11)
         Subsystem: Google, Inc. Device 00c3
         Flags: fast devsel, NUMA node 0, IOMMU group 83
@@ -16,20 +17,28 @@ DMA_MAP / DMA_UNMAP 4K page every 2M in IOVA SPACE for a given number of IOVA sp
         Capabilities: [158] Transaction Processing Hints
         Capabilities: [2ec] Access Control Services
         Capabilities: [1e4] Address Translation Service (ATS)
+```
  
 ### Get vendor id for this device:
-\# lspci -n -s 0000:02:00.1
+```
+# lspci -n -s 0000:02:00.1
    02:00.1 0200: 8086:1889 (rev 11)
+```
  
 ### Add it to a vfio-pci:
-   echo 8086 1889 > /sys/bus/pci/drivers/vfio-pci/new_id
+```
+echo 8086 1889 > /sys/bus/pci/drivers/vfio-pci/new_id
+```
 
 ### Build iova_stress
-\# make
- cc -o iova_stress -static -Os iova_stress.c
+```
+# make
+cc -o iova_stress -static -Os iova_stress.c
+```
 
  ### Run this test with IOMMU group 83, and max iova space = 16T
- \# iova_stress  -g 83 -s 16
+```
+ # iova_stress  -g 83 -s 16
   iova space:     0T      free memory:  1504G
   iova space:     1T      free memory:  1503G
   iova space:     2T      free memory:  1500G
@@ -46,3 +55,4 @@ DMA_MAP / DMA_UNMAP 4K page every 2M in IOVA SPACE for a given number of IOVA sp
   iova space:    13T      free memory:  1479G
   iova space:    14T      free memory:  1476G
   iova space:    15T      free memory:  1474G
+```
