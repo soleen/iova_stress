@@ -79,4 +79,4 @@ iova space:    13T      free memory:   471G
 iova space:    14T      free memory:   469G
 iova space:    15T      free memory:   467G
 ```
-In the above example, it is clear that Kernel memory useage increases as more IOVA space is touched.
+Above example show the Kernel memory increase as more IOVA space is touched.
