@@ -37,6 +37,8 @@ cc -o iova_stress -static -Os iova_stress.c
 ```
 
  ### Run this test with IOMMU group 83, and max iova space = 16T
+
+Kernel: 6.4, Driver: AMD IOMMU:
 ```
  # iova_stress  -g 83 -s 16
   iova space:     0T      free memory:  1504G
@@ -56,3 +58,25 @@ cc -o iova_stress -static -Os iova_stress.c
   iova space:    14T      free memory:  1476G
   iova space:    15T      free memory:  1474G
 ```
+
+Kernel: 6.4, Driver: Intel IOMMU:
+```
+yqbtg1:~# /tmp/iova_stress -g 22 -s 16
+iova space:     0T      free memory:   497G
+iova space:     1T      free memory:   495G
+iova space:     2T      free memory:   493G
+iova space:     3T      free memory:   491G
+iova space:     4T      free memory:   489G
+iova space:     5T      free memory:   487G
+iova space:     6T      free memory:   485G
+iova space:     7T      free memory:   483G
+iova space:     8T      free memory:   481G
+iova space:     9T      free memory:   479G
+iova space:    10T      free memory:   477G
+iova space:    11T      free memory:   475G
+iova space:    12T      free memory:   473G
+iova space:    13T      free memory:   471G
+iova space:    14T      free memory:   469G
+iova space:    15T      free memory:   467G
+```
+In the above example, it is clear that Kernel memory useage increases as more IOVA space is touched.
