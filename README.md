@@ -30,9 +30,16 @@ DMA_MAP / DMA_UNMAP 4K page every 2M in IOVA SPACE for a given number of IOVA sp
 echo 8086 1889 > /sys/bus/pci/drivers/vfio-pci/new_id
 ```
 
+### Use vfio_new_id
+Alternativly to the above, use vfio_new_id script to add vfio ids for
+each device in the system.
+```
+# vfio_new_id
+```
+
 ### Build iova_stress
 ```
-# make
+$ make
 cc -o iova_stress -static -Os iova_stress.c
 ```
 
