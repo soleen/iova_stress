@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# create vfio new_id for each device
+for i in $(lspci  -n | awk '{print $3}' | sort -u); do
+	echo $i | tr ':' ' ' > /sys/bus/pci/drivers/vfio-pci/new_id
+done
