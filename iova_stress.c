@@ -16,6 +16,8 @@
 #define IOMMU_GROUP_DEFAULT		83
 #define IOVA_SPACE_SIZE_DEFAULT		45
 #define DMA_SIZE			sysconf(_SC_PAGE_SIZE)
+#define NSEC				1000000000ul
+#define USEC				1000000ul
 
 static unsigned long gethrtime(void)
 {
@@ -24,7 +26,7 @@ static unsigned long gethrtime(void)
 
 	clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
 
-	result = 1000000000ull * (unsigned long)ts.tv_sec;
+	result = NSEC * (unsigned long)ts.tv_sec;
 	result += ts.tv_nsec;
 
 	return result;
@@ -152,10 +154,8 @@ main (int argc, char *argv[]) {
 
 		iommu = freeram_before - MIN(freeram_before, freeram_after);
 		printf("dma_size: %7ldK iova space: %ldT iommu: ~%7ldM time: %4ld.%03lds\n",
-			dma_size / 1024,
-			iova_space,
-			iommu >> 20,
-			(s2 - s1) / 1000000000, ((s2 - s1) % 1000000000) / 1000000);
+			dma_size / 1024, iova_space, iommu >> 20,
+			(s2 - s1) / NSEC, ((s2 - s1) % NSEC) / USEC);
 		dma_size = second_dma_size;
 		second_dma_size = 0;
 	} while (dma_size);
