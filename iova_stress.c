@@ -19,6 +19,15 @@
 #define NSEC				1000000000ul
 #define USEC				1000000ul
 
+#define GETOPT_STR			"g:s:hS:v"
+#define HELP_STR											\
+"Usage: %s [-g iommu_group] [-s iova_max (in Terabytes)] [-S second_run_dma_size (in MB)] [-v]\n\n"	\
+"-g	iommu group number, if not specified search for the first available\n"				\
+"-s	iova size, specified in Terabytes, the default value is [%d]\n"					\
+"-h	print this help\n"										\
+"-S	dma_size map/unmap in megabytes for the 2nd run, if not specified the 2nd run is disabled\n"	\
+"-v	verbose, print status update at every 1TB of VA space\n"
+
 static unsigned long gethrtime(void)
 {
 	struct timespec ts;
@@ -91,7 +100,7 @@ main (int argc, char *argv[]) {
 	char group_path[256];
 	int rv = EXIT_FAILURE;
 
-	while ((opt = getopt(argc, argv, "g:s:hS:v")) != -1) {
+	while ((opt = getopt(argc, argv, GETOPT_STR)) != -1) {
 		switch (opt) {
 		case 'g':
 			iommu_group = atoi(optarg);
@@ -109,8 +118,8 @@ main (int argc, char *argv[]) {
 		case 'h':
 			rv = EXIT_SUCCESS;
 		default: /* '?' */
-			fprintf(stderr, "Usage: %s [-g iommu_group] [-s iova_max (in Terabytes)] [-S second_run_dma_size (in MB)] [-v]\n",
-				argv[0]);
+			fprintf(stderr, HELP_STR, argv[0],
+				IOVA_SPACE_SIZE_DEFAULT);
 			exit(rv);
 		}
 	}
