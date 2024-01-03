@@ -87,6 +87,7 @@ main (int argc, char *argv[]) {
 	unsigned long second_dma_size = 0;
 	struct sysinfo info;
 	char group_path[256];
+	int rv = EXIT_FAILURE;
 
 	while ((opt = getopt(argc, argv, "g:s:hS:v")) != -1) {
 		switch (opt) {
@@ -104,10 +105,11 @@ main (int argc, char *argv[]) {
 			verbose = 1;
 			break;
 		case 'h':
+			rv = EXIT_SUCCESS;
 		default: /* '?' */
 			fprintf(stderr, "Usage: %s [-g iommu_group] [-s iova_max (in Terabytes)] [-S second_run_dma_size (in MB)] [-v]\n",
 				argv[0]);
-			exit(EXIT_FAILURE);
+			exit(rv);
 		}
 	}
 
@@ -115,7 +117,7 @@ main (int argc, char *argv[]) {
 	container = open("/dev/vfio/vfio", O_RDWR);
 	if (container < 0) {
 		perror("open(\"/dev/vfio/vfio\"");
-		exit(1);
+		exit(rv);
 	}
 
 	/* Open the group */
@@ -123,19 +125,19 @@ main (int argc, char *argv[]) {
 	group = open(group_path, O_RDWR);
 	if (group < 0) {
 		perror("open(group_path)");
-		exit(1);
+		exit(rv);
 	}
 
 	/* Add the group to the container */
 	if (ioctl(group, VFIO_GROUP_SET_CONTAINER, &container)) {
 		perror("ioctl(group, VFIO_GROUP_SET_CONTAINER, &container)");
-		exit(1);
+		exit(rv);
 	}
 
 	/* Enable the IOMMU model we want */
 	if (ioctl(container, VFIO_SET_IOMMU, VFIO_TYPE1_IOMMU)) {
 		perror("ioctl(container, VFIO_SET_IOMMU, VFIO_TYPE1_IOMMU)");
-		exit(1);
+		exit(rv);
 	}
 
 	dma_size = first_dma_size;;
@@ -158,5 +160,5 @@ main (int argc, char *argv[]) {
 		second_dma_size = 0;
 	} while (dma_size);
 
-	return 0;
+	return EXIT_SUCCESS;
 }
