@@ -21,13 +21,14 @@
 #define USEC				1000000ul
 
 #define GETOPT_STR			"g:s:hS:v"
-#define HELP_STR											\
-"Usage: %s [-g iommu_group] [-s iova_max (in Terabytes)] [-S second_run_dma_size (in MB)] [-v]\n\n"	\
-"-g	iommu group number, if not specified search for the first available\n"				\
-"-s	iova size, specified in Terabytes, the default value is [%d]\n"					\
-"-h	print this help\n"										\
-"-S	dma_size map/unmap in megabytes for the 2nd run, if not specified the 2nd run is disabled\n"	\
-"-v	verbose, print status update at every 1TB of VA space\n"
+#define HELP_STR								\
+"Usage: %s [-g iommu_group] [-s iova_max] [-S second_run_dma_size] [-v]\n\n"	\
+"-g\tiommu group number, if not specified search for the first available\n"	\
+"-s\tiova size, specified in Terabytes, the default value is [%d]\n"		\
+"-h\tprint this help\n"								\
+"-S\tdma_size map/unmap in megabytes for the 2nd run, if not specified\n"	\
+"\tthe 2nd run is disabled\n"							\
+"-v\tverbose, print status update at every 1TB of VA space\n"
 
 static unsigned long gethrtime(void)
 {
@@ -43,8 +44,8 @@ static unsigned long gethrtime(void)
 }
 
 static void dma_map_unmap(int container, unsigned long iova_space,
-			  unsigned long dma_size, int verbose) {
-
+			  unsigned long dma_size, int verbose)
+{
 	struct vfio_iommu_type1_dma_map dma_map = { 0 };
 	struct vfio_iommu_type1_dma_unmap dma_unmap = { 0 };
 
@@ -56,12 +57,13 @@ static void dma_map_unmap(int container, unsigned long iova_space,
 					MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
 
 	if ((void *)dma_map.vaddr == MAP_FAILED) {
-		err(EXIT_FAILURE, "mmap(0, dma_size=%ld, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, ...)",
-		    dma_size);
+		err(EXIT_FAILURE, "mmap(0, dma_size=%ld, ...)", dma_size);
 	}
 
-	dma_unmap.size = dma_map.size = dma_size;
-	dma_unmap.iova = dma_map.iova = 0;
+	dma_unmap.size = dma_size;
+	dma_map.size = dma_size;
+	dma_unmap.iova = 0;
+	dma_map.iova = 0;
 	dma_map.flags = VFIO_DMA_MAP_FLAG_READ | VFIO_DMA_MAP_FLAG_WRITE;
 
 	while (dma_map.iova < iova_space << 40) {
@@ -85,7 +87,8 @@ static void dma_map_unmap(int container, unsigned long iova_space,
 	munmap((void *)dma_map.vaddr, dma_size);
 }
 
-int main (int argc, char *argv[]) {
+int main (int argc, char *argv[])
+{
 	int container, group, opt, verbose = 0;
 	int iommu_group = -1;
 	unsigned long iova_space = IOVA_SPACE_SIZE_DEFAULT;
