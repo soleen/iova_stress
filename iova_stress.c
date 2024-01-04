@@ -56,9 +56,8 @@ static void dma_map_unmap(int container, unsigned long iova_space,
 	dma_map.vaddr = (__u64)mmap(0, dma_size, PROT_READ | PROT_WRITE,
 					MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
 
-	if ((void *)dma_map.vaddr == MAP_FAILED) {
+	if ((void *)dma_map.vaddr == MAP_FAILED)
 		err(EXIT_FAILURE, "mmap(0, dma_size=%ld, ...)", dma_size);
-	}
 
 	dma_unmap.size = dma_size;
 	dma_map.size = dma_size;
