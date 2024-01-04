@@ -70,7 +70,7 @@ static void dma_map_unmap(int container, unsigned long iova_space,
 			struct sysinfo info;
 
 			sysinfo(&info);
-			printf("iova space: %5ldT\tfree memory: %5ldG\n", dma_map.iova >> 40, info.freeram * info.mem_unit >> 30);
+			printf("iova space: %5lluT\tfree memory: %5luG\n", dma_map.iova >> 40, info.freeram * info.mem_unit >> 30);
 		}
 		dma_map.iova += MAX(dma_size, 2 << 20);
 		dma_unmap.iova += MAX(dma_size, 2 << 20);
@@ -79,7 +79,7 @@ static void dma_map_unmap(int container, unsigned long iova_space,
 			continue;
 		}
 		if (ioctl(container, VFIO_IOMMU_UNMAP_DMA, &dma_unmap))
-			err(EXIT_FAILURE, "VFIO_IOMMU_UNMAP_DMA failed at 0x%lx", dma_unmap.iova);
+			err(EXIT_FAILURE, "VFIO_IOMMU_UNMAP_DMA failed at 0x%llx", dma_unmap.iova);
 	}
 
 	munmap((void *)dma_map.vaddr, dma_size);
