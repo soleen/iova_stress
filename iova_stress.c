@@ -86,7 +86,7 @@ static void dma_map_unmap(int container, unsigned long iova_space,
 	munmap((void *)dma_map.vaddr, dma_size);
 }
 
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	int container, group, opt, verbose = 0;
 	int iommu_group = -1;
